@@ -11,8 +11,9 @@ Backend: Java. This seed has no live model calls, credentials, external writes, 
 ## Verify
 
 ```sh
-javac --release 17 -d build src/OrderTimeline.java
+javac --release 17 -d build src/OrderTimeline.java test/TimelineFixtures.java
 java -cp build OrderTimeline
+java -cp build TimelineFixtures
 ```
 
 ## One-week MVP
@@ -22,3 +23,5 @@ See [ROADMAP.md](ROADMAP.md) for seven bounded development days and acceptance c
 ## Evidence
 
 The current automated checks validate the small implemented component only. They do not establish end-to-end AI quality, scalability, or production readiness. Later demos and LinkedIn write-ups should cite measured behavior and disclosed limitations.
+
+For one ordered timeline, investigate(events) returns the final state and an immutable sequence of transitions citing their original event IDs. An identical retry contributes no extra evidence. Reusing an ID with another event type rejects the timeline. This component does not infer why a failure occurred.

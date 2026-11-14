@@ -2,9 +2,9 @@
 
 Goal: Investigate order failures from event timelines and cite the evidence.
 
-Status: queued. The initial core component is implemented; the full MVP is not.
+Status: active. The initial core component is implemented; the full MVP is not.
 
-- [ ] Day 1: Order state reducer and domain fixtures.
+- [x] Day 1: Order state reducer and domain fixtures.
 - [ ] Day 2: Add event ingestion API with duplicate handling.
 - [ ] Day 3: Persist order timelines.
 - [ ] Day 4: Expose read-only investigation tools.

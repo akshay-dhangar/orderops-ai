@@ -11,5 +11,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - run: javac --release 17 -d build src/OrderTimeline.java
+      - run: javac --release 17 -d build src/OrderTimeline.java test/TimelineFixtures.java
       - run: java -cp build OrderTimeline
+      - run: java -cp build TimelineFixtures
