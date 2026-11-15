@@ -1,0 +1,29 @@
+test/IngestionFixtures.java
+  s_90026bd1685103::t_246524d5ba7bcb 1-31
+PROGRESS.md
+  s_90026bd1685103::t_246524d5ba7bcb 4-7
+.github/workflows/ci.yml
+  s_90026bd1685103::t_246524d5ba7bcb 14,17
+README.md
+  s_90026bd1685103::t_246524d5ba7bcb 14,17,29-36
+src/EventApi.java
+  s_90026bd1685103::t_246524d5ba7bcb 1-65
+ROADMAP.md
+  s_90026bd1685103::t_246524d5ba7bcb 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "22475362b1e0c6ac4fe6a3b8e96f40550501efaf",
+  "prompts": {},
+  "sessions": {
+    "s_90026bd1685103": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a187ba-22aa-7793-8324-39d8f75719e0",
+        "model": "unknown"
+      },
+      "human_author": "Akshay Dhangar <48667712+akshay-dhangar@users.noreply.github.com>"
+    }
+  }
+}
