@@ -5,3 +5,7 @@ Day 1 complete. A failed inventory fixture replays an earlier checkout event and
 ## 14 November — ingestion API
 
 Day 2 complete. Java 17 loopback HTTP fixtures cover accepted events, retry after a later transition, conflicting IDs, invalid transitions followed by a corrected request, per-order ID reuse, and invalid or oversized bodies. The next milestone is persistence across restarts. [Java CI history](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)
+
+## 15 November — restart persistence
+
+Day 3 adds optional local file storage. The HTTP fixture restarts the server, retries events from two orders and advances the restored reservation to shipped. Next is read-only investigation. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)

@@ -6,7 +6,7 @@ Status: active. The initial core component is implemented; the full MVP is not.
 
 - [x] Day 1: Order state reducer and domain fixtures.
 - [x] Day 2: Add event ingestion API with duplicate handling.
-- [ ] Day 3: Persist order timelines.
+- [x] Day 3: Persist order timelines.
 - [ ] Day 4: Expose read-only investigation tools.
 - [ ] Day 5: Add evidence-linked model summaries with a mock provider.
 - [ ] Day 6: Evaluate common failure scenarios.

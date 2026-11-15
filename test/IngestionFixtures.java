@@ -11,7 +11,8 @@ public final class IngestionFixtures {
     }
 
     public static void main(String[] args) throws Exception {
-        var server = EventApi.start(0);
+        var directory = java.nio.file.Files.createTempDirectory("orderops-test");
+        var server = EventApi.start(0, directory);
         try {
             var root = URI.create("http://127.0.0.1:" + server.getAddress().getPort());
             var placed = root.resolve("/orders/A/events/1");
@@ -26,6 +27,19 @@ public final class IngestionFixtures {
             put(next, "x".repeat(33), 413, "event type too long");
         } finally {
             server.stop(0);
+        }
+        server = EventApi.start(0, directory);
+        try {
+            var root = URI.create("http://127.0.0.1:" + server.getAddress().getPort());
+            put(root.resolve("/orders/A/events/1"), "placed", 200, "RESERVED");
+            put(root.resolve("/orders/B/events/1"), "failed", 200, "FAILED");
+            put(root.resolve("/orders/A/events/3"), "shipped", 201, "SHIPPED");
+        } finally {
+            server.stop(0);
+            try (var files = java.nio.file.Files.list(directory)) {
+                for (var file : files.toList()) java.nio.file.Files.delete(file);
+            }
+            java.nio.file.Files.delete(directory);
         }
     }
 }

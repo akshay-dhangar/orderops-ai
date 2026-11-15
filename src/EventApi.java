@@ -3,6 +3,8 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -11,10 +13,40 @@ public final class EventApi {
     private static final Set<String> TYPES = Set.of("placed", "reserved", "shipped", "failed");
     private final Map<String, List<OrderTimeline.Event>> orders = new HashMap<>();
 
+    private final Path directory;
+
+    private EventApi(Path directory) throws IOException {
+        this.directory = directory;
+        if (directory != null) Files.createDirectories(directory);
+    }
+
     private record Reply(int status, String text) {}
 
     private synchronized Reply append(String order, OrderTimeline.Event event) {
-        var existing = orders.getOrDefault(order, List.of());
+        if (directory == null) return apply(order, event, orders.getOrDefault(order, List.of()), null);
+        try (var channel = FileChannel.open(directory.resolve(".lock"),
+                StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+             var lock = channel.lock()) {
+            String key = HexFormat.of().formatHex(order.getBytes(StandardCharsets.US_ASCII));
+            Path file = directory.resolve(key + ".events");
+            var history = new ArrayList<OrderTimeline.Event>();
+            if (!Files.notExists(file)) {
+                for (String line : Files.readAllLines(file)) {
+                    String[] fields = line.split("\t", -1);
+                    if (fields.length != 2 || !fields[0].matches("[A-Za-z0-9_-]{1,64}") || !TYPES.contains(fields[1]))
+                        throw new IOException("invalid timeline record");
+                    history.add(new OrderTimeline.Event(fields[0], fields[1]));
+                }
+                if (history.isEmpty() || OrderTimeline.investigate(history).evidence().size() != history.size())
+                    throw new IOException("invalid stored timeline");
+            }
+            return apply(order, event, history, file);
+        } catch (IOException | IllegalArgumentException | java.nio.channels.OverlappingFileLockException failure) {
+            return new Reply(503, "timeline storage unavailable");
+        }
+    }
+
+    private Reply apply(String order, OrderTimeline.Event event, List<OrderTimeline.Event> existing, Path file) {
         var candidate = new ArrayList<>(existing);
         candidate.add(event);
         try {
@@ -22,8 +54,20 @@ public final class EventApi {
             if (result.evidence().size() == existing.size()) {
                 return new Reply(200, result.state().name());
             }
-            orders.put(order, candidate);
+            if (file == null) {
+                orders.put(order, candidate);
+            } else {
+                Path temp = Files.createTempFile(directory, "timeline-", ".tmp");
+                try {
+                    Files.write(temp, candidate.stream().map(e -> e.id() + "\t" + e.type()).toList());
+                    Files.move(temp, file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                } finally {
+                    Files.deleteIfExists(temp);
+                }
+            }
             return new Reply(201, result.state().name());
+        } catch (IOException failure) {
+            return new Reply(503, "timeline storage unavailable");
         } catch (IllegalArgumentException invalid) {
             return new Reply(409, invalid.getMessage());
         }
@@ -44,7 +88,11 @@ public final class EventApi {
     }
 
     static HttpServer start(int port) throws IOException {
-        var api = new EventApi();
+        return start(port, null);
+    }
+
+    static HttpServer start(int port, Path directory) throws IOException {
+        var api = new EventApi(directory);
         var server = HttpServer.create(new InetSocketAddress("127.0.0.1", port), 0);
         server.createContext("/", exchange -> {
             try (exchange) {
@@ -60,6 +108,6 @@ public final class EventApi {
     }
 
     public static void main(String[] args) throws IOException {
-        start(args.length == 0 ? 8080 : Integer.parseInt(args[0]));
+        start(args.length == 0 ? 8080 : Integer.parseInt(args[0]), args.length > 1 ? Path.of(args[1]) : null);
     }
 }
