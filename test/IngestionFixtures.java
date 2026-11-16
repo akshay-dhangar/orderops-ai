@@ -33,6 +33,14 @@ public final class IngestionFixtures {
             var root = URI.create("http://127.0.0.1:" + server.getAddress().getPort());
             put(root.resolve("/orders/A/events/1"), "placed", 200, "RESERVED");
             put(root.resolve("/orders/B/events/1"), "failed", 200, "FAILED");
+            var read = HttpRequest.newBuilder(root.resolve("/orders/A/investigation")).GET().build();
+            var response = CLIENT.send(read, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200 || !response.body().equals("order A state RESERVED\n1 NEW -> PLACED\n2 PLACED -> RESERVED\n"))
+                throw new AssertionError("unexpected investigation: " + response.body());
+            var missing = HttpRequest.newBuilder(root.resolve("/orders/missing/investigation")).GET().build();
+            if (CLIENT.send(missing, HttpResponse.BodyHandlers.discarding()).statusCode() != 404)
+                throw new AssertionError("missing order accepted");
+            put(root.resolve("/orders/A/investigation"), "failed", 405, "use GET");
             put(root.resolve("/orders/A/events/3"), "shipped", 201, "SHIPPED");
         } finally {
             server.stop(0);

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 public final class EventApi {
     private static final Pattern ROUTE = Pattern.compile("/orders/([A-Za-z0-9_-]{1,64})/events/([A-Za-z0-9_-]{1,64})");
+    private static final Pattern INVESTIGATION = Pattern.compile("/orders/([A-Za-z0-9_-]{1,64})/investigation");
     private static final Set<String> TYPES = Set.of("placed", "reserved", "shipped", "failed");
     private final Map<String, List<OrderTimeline.Event>> orders = new HashMap<>();
 
@@ -27,21 +28,46 @@ public final class EventApi {
         try (var channel = FileChannel.open(directory.resolve(".lock"),
                 StandardOpenOption.CREATE, StandardOpenOption.WRITE);
              var lock = channel.lock()) {
-            String key = HexFormat.of().formatHex(order.getBytes(StandardCharsets.US_ASCII));
-            Path file = directory.resolve(key + ".events");
-            var history = new ArrayList<OrderTimeline.Event>();
-            if (!Files.notExists(file)) {
-                for (String line : Files.readAllLines(file)) {
-                    String[] fields = line.split("\t", -1);
-                    if (fields.length != 2 || !fields[0].matches("[A-Za-z0-9_-]{1,64}") || !TYPES.contains(fields[1]))
-                        throw new IOException("invalid timeline record");
-                    history.add(new OrderTimeline.Event(fields[0], fields[1]));
-                }
-                if (history.isEmpty() || OrderTimeline.investigate(history).evidence().size() != history.size())
-                    throw new IOException("invalid stored timeline");
-            }
+            Path file = timelineFile(order);
+            var history = load(file);
             return apply(order, event, history, file);
         } catch (IOException | IllegalArgumentException | java.nio.channels.OverlappingFileLockException failure) {
+            return new Reply(503, "timeline storage unavailable");
+        }
+    }
+
+    private Path timelineFile(String order) {
+        String key = HexFormat.of().formatHex(order.getBytes(StandardCharsets.US_ASCII));
+        return directory.resolve(key + ".events");
+    }
+
+    private List<OrderTimeline.Event> load(Path file) throws IOException {
+        var history = new ArrayList<OrderTimeline.Event>();
+        if (!Files.notExists(file)) {
+            for (String line : Files.readAllLines(file)) {
+                String[] fields = line.split("\t", -1);
+                if (fields.length != 2 || !fields[0].matches("[A-Za-z0-9_-]{1,64}") || !TYPES.contains(fields[1]))
+                    throw new IOException("invalid timeline record");
+                history.add(new OrderTimeline.Event(fields[0], fields[1]));
+            }
+            if (history.isEmpty() || OrderTimeline.investigate(history).evidence().size() != history.size())
+                throw new IOException("invalid stored timeline");
+        }
+        return history;
+    }
+
+    private synchronized Reply investigate(String order) {
+        try {
+            var history = directory == null ? orders.getOrDefault(order, List.of()) : load(timelineFile(order));
+            if (history.isEmpty()) return new Reply(404, "unknown order");
+            var result = OrderTimeline.investigate(history);
+            var body = new StringBuilder("order ").append(order).append(" state ").append(result.state()).append('\n');
+            for (var step : result.evidence()) {
+                body.append(step.eventId()).append(' ').append(step.before()).append(" -> ")
+                    .append(step.after()).append('\n');
+            }
+            return new Reply(200, body.toString());
+        } catch (IOException | IllegalArgumentException failure) {
             return new Reply(503, "timeline storage unavailable");
         }
     }
@@ -74,6 +100,14 @@ public final class EventApi {
     }
 
     private Reply route(HttpExchange request) throws IOException {
+        var investigation = INVESTIGATION.matcher(request.getRequestURI().getRawPath());
+        if (investigation.matches()) {
+            if (!request.getRequestMethod().equals("GET")) {
+                request.getResponseHeaders().set("Allow", "GET");
+                return new Reply(405, "use GET");
+            }
+            return investigate(investigation.group(1));
+        }
         var path = ROUTE.matcher(request.getRequestURI().getRawPath());
         if (!path.matches()) return new Reply(404, "unknown path");
         if (!request.getRequestMethod().equals("PUT")) {

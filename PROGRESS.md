@@ -9,3 +9,7 @@ Day 2 complete. Java 17 loopback HTTP fixtures cover accepted events, retry afte
 ## 15 November — restart persistence
 
 Day 3 adds optional local file storage. The HTTP fixture restarts the server, retries events from two orders and advances the restored reservation to shipped. Next is read-only investigation. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)
+
+## 16 November — read-only investigations
+
+Day 4 exposes state and ordered event evidence through GET. The restart fixture checks the exact history after duplicate and rejected writes, unknown-order handling, and method rejection. Next is an evidence-linked summary with a mock provider. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)

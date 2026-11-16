@@ -36,3 +36,5 @@ After compiling, run `java -cp build EventApi`. In another terminal:
 Use a distinct event ID for each transition. IDs accept 1–64 ASCII letters, digits, underscores or hyphens. The body is exactly one of placed, reserved, shipped or failed. A new event returns 201 and the current state. An identical retry returns 200 and the latest state. Conflicting IDs or invalid transitions return 409 and preserve the timeline. IDs are scoped to an order. Restarting the local server clears its in-memory history.
 
 For persistent storage run `java -cp build EventApi 8080 /path/to/order-data`. Reuse that directory on restart. A lock serializes updates and an atomic rename publishes each accepted timeline on the local filesystem. The default launch mode keeps orders in memory.
+
+Read the current state and chronological evidence with `curl http://127.0.0.1:8080/orders/demo/investigation`. Each line after the state names the event ID and its before/after states. Unknown orders return 404 and unreadable timelines return 503.
