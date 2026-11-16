@@ -1,0 +1,27 @@
+test/IngestionFixtures.java
+  s_90026bd1685103::t_edd0008850dc59 36-43
+src/EventApi.java
+  s_90026bd1685103::t_edd0008850dc59 13,31-32,39-74,103-110
+ROADMAP.md
+  s_90026bd1685103::t_edd0008850dc59 10
+README.md
+  s_90026bd1685103::t_edd0008850dc59 39-40
+PROGRESS.md
+  s_90026bd1685103::t_edd0008850dc59 12-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "28fe385b669d1876e9ed6242313c85084cc559f4",
+  "prompts": {},
+  "sessions": {
+    "s_90026bd1685103": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a187ba-22aa-7793-8324-39d8f75719e0",
+        "model": "unknown"
+      },
+      "human_author": "Akshay Dhangar <48667712+akshay-dhangar@users.noreply.github.com>"
+    }
+  }
+}
