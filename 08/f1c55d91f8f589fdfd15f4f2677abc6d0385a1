@@ -1,0 +1,27 @@
+README.md
+  s_eb0b26e52cc031::t_36a06fb7b214c1 43-44
+test/FailureScenarios.java
+  s_eb0b26e52cc031::t_36a06fb7b214c1 1-58
+ROADMAP.md
+  s_eb0b26e52cc031::t_36a06fb7b214c1 12
+.github/workflows/ci.yml
+  s_eb0b26e52cc031::t_36a06fb7b214c1 18
+PROGRESS.md
+  s_eb0b26e52cc031::t_36a06fb7b214c1 20-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "08f1c55d91f8f589fdfd15f4f2677abc6d0385a1",
+  "prompts": {},
+  "sessions": {
+    "s_eb0b26e52cc031": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a187ba-22aa-7793-8324-39d8f75719e0",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Akshay Dhangar <48667712+akshay-dhangar@users.noreply.github.com>"
+    }
+  }
+}
