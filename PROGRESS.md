@@ -13,3 +13,7 @@ Day 3 adds optional local file storage. The HTTP fixture restarts the server, re
 ## 16 November — read-only investigations
 
 Day 4 exposes state and ordered event evidence through GET. The restart fixture checks the exact history after duplicate and rejected writes, unknown-order handling, and method rejection. Next is an evidence-linked summary with a mock provider. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)
+
+## 17 November — cited mock summaries
+
+Day 5 adds a deterministic summary provider through the GET summary endpoint. The HTTP fixture verifies exact failure-summary text and citations from restored history and rejects writes to the endpoint. Next is failure-scenario evaluation. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)

@@ -37,6 +37,14 @@ public final class IngestionFixtures {
             var response = CLIENT.send(read, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() != 200 || !response.body().equals("order A state RESERVED\n1 NEW -> PLACED\n2 PLACED -> RESERVED\n"))
                 throw new AssertionError("unexpected investigation: " + response.body());
+            var summaryRequest = HttpRequest.newBuilder(root.resolve("/orders/B/summary")).GET().build();
+            var summary = CLIENT.send(summaryRequest, HttpResponse.BodyHandlers.ofString());
+            String expectedSummary = "provider mock-v1\nOrder B is FAILED [event 1].\n"
+                + "State changed from NEW to FAILED [event 1].\n"
+                + "The failure cause is unknown from the recorded event types.\n";
+            if (summary.statusCode() != 200 || !summary.body().equals(expectedSummary))
+                throw new AssertionError("unexpected summary: " + summary.body());
+            put(root.resolve("/orders/B/summary"), "placed", 405, "use GET");
             var missing = HttpRequest.newBuilder(root.resolve("/orders/missing/investigation")).GET().build();
             if (CLIENT.send(missing, HttpResponse.BodyHandlers.discarding()).statusCode() != 404)
                 throw new AssertionError("missing order accepted");

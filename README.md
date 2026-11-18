@@ -38,3 +38,5 @@ Use a distinct event ID for each transition. IDs accept 1–64 ASCII letters, di
 For persistent storage run `java -cp build EventApi 8080 /path/to/order-data`. Reuse that directory on restart. A lock serializes updates and an atomic rename publishes each accepted timeline on the local filesystem. The default launch mode keeps orders in memory.
 
 Read the current state and chronological evidence with `curl http://127.0.0.1:8080/orders/demo/investigation`. Each line after the state names the event ID and its before/after states. Unknown orders return 404 and unreadable timelines return 503.
+
+Get a deterministic summary with `curl http://127.0.0.1:8080/orders/demo/summary`. The response identifies provider mock-v1 and cites an event ID for each state claim. Failed orders report that the cause is unknown from the recorded event types. Live model integration and quality evaluation remain future work.

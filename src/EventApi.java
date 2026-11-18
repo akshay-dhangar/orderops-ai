@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public final class EventApi {
     private static final Pattern ROUTE = Pattern.compile("/orders/([A-Za-z0-9_-]{1,64})/events/([A-Za-z0-9_-]{1,64})");
-    private static final Pattern INVESTIGATION = Pattern.compile("/orders/([A-Za-z0-9_-]{1,64})/investigation");
+    private static final Pattern INVESTIGATION = Pattern.compile("/orders/([A-Za-z0-9_-]{1,64})/(investigation|summary)");
     private static final Set<String> TYPES = Set.of("placed", "reserved", "shipped", "failed");
     private final Map<String, List<OrderTimeline.Event>> orders = new HashMap<>();
 
@@ -56,11 +56,12 @@ public final class EventApi {
         return history;
     }
 
-    private synchronized Reply investigate(String order) {
+    private synchronized Reply investigate(String order, boolean summary) {
         try {
             var history = directory == null ? orders.getOrDefault(order, List.of()) : load(timelineFile(order));
             if (history.isEmpty()) return new Reply(404, "unknown order");
             var result = OrderTimeline.investigate(history);
+            if (summary) return new Reply(200, new MockSummaryProvider().summarize(order, result));
             var body = new StringBuilder("order ").append(order).append(" state ").append(result.state()).append('\n');
             for (var step : result.evidence()) {
                 body.append(step.eventId()).append(' ').append(step.before()).append(" -> ")
@@ -106,7 +107,7 @@ public final class EventApi {
                 request.getResponseHeaders().set("Allow", "GET");
                 return new Reply(405, "use GET");
             }
-            return investigate(investigation.group(1));
+            return investigate(investigation.group(1), investigation.group(2).equals("summary"));
         }
         var path = ROUTE.matcher(request.getRequestURI().getRawPath());
         if (!path.matches()) return new Reply(404, "unknown path");
