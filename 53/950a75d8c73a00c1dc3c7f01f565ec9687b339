@@ -1,0 +1,29 @@
+src/EventApi.java
+  s_90026bd1685103::t_5cf53f79f7dab1 13,59,64,110
+src/MockSummaryProvider.java
+  s_90026bd1685103::t_5cf53f79f7dab1 1-21
+test/IngestionFixtures.java
+  s_90026bd1685103::t_5cf53f79f7dab1 40-47
+README.md
+  s_90026bd1685103::t_5cf53f79f7dab1 41-42
+PROGRESS.md
+  s_90026bd1685103::t_5cf53f79f7dab1 16-19
+ROADMAP.md
+  s_90026bd1685103::t_5cf53f79f7dab1 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "53950a75d8c73a00c1dc3c7f01f565ec9687b339",
+  "prompts": {},
+  "sessions": {
+    "s_90026bd1685103": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a187ba-22aa-7793-8324-39d8f75719e0",
+        "model": "unknown"
+      },
+      "human_author": "Akshay Dhangar <48667712+akshay-dhangar@users.noreply.github.com>"
+    }
+  }
+}
