@@ -17,3 +17,7 @@ Day 4 exposes state and ordered event evidence through GET. The restart fixture 
 ## 17 November — cited mock summaries
 
 Day 5 adds a deterministic summary provider through the GET summary endpoint. The HTTP fixture verifies exact failure-summary text and citations from restored history and rejects writes to the endpoint. Next is failure-scenario evaluation. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)
+
+## 18 November — failure evaluation
+
+Day 6 evaluates terminal-state preservation, malformed/duplicate/invalid-transition/empty persisted histories, retry after storage repair and missing-order summaries over HTTP. Corrupt history remains intact after rejected writes. All fixtures passed locally. Packaged demo, limitations and a local LinkedIn draft remain for Day 7. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)

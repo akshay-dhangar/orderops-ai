@@ -40,3 +40,5 @@ For persistent storage run `java -cp build EventApi 8080 /path/to/order-data`. R
 Read the current state and chronological evidence with `curl http://127.0.0.1:8080/orders/demo/investigation`. Each line after the state names the event ID and its before/after states. Unknown orders return 404 and unreadable timelines return 503.
 
 Get a deterministic summary with `curl http://127.0.0.1:8080/orders/demo/summary`. The response identifies provider mock-v1 and cites an event ID for each state claim. Failed orders report that the cause is unknown from the recorded event types. Live model integration and quality evaluation remain future work.
+
+Run `java -cp build FailureScenarios` after compilation to evaluate terminal-state rejection, four corrupt-history variants, recovery after storage repair and unknown-order summaries. The fixture exercises real loopback HTTP requests with bounded client timeouts.
