@@ -2,11 +2,11 @@
 
 Investigate order failures from event timelines and cite the evidence.
 
-**Status: initial working component; full MVP is planned, not complete.**
+**Status: scoped local MVP implemented.**
 
-Implemented now: Reduce ordered domain events into an order state.
+Implemented now: event ingestion, optional local persistence, read-only investigations and event-cited mock summaries.
 
-Backend: Java. This seed has no live model calls, credentials, external writes, or deployment.
+Backend: Java 17 with the JDK HTTP server. Summaries use the deterministic mock-v1 provider.
 
 ## Verify
 
@@ -23,7 +23,7 @@ See [ROADMAP.md](ROADMAP.md) for seven bounded development days and acceptance c
 
 ## Evidence
 
-The current automated checks validate the small implemented component only. They do not establish end-to-end AI quality, scalability, or production readiness. Later demos and LinkedIn write-ups should cite measured behavior and disclosed limitations.
+The demo exercises real loopback HTTP requests, application restart, duplicate/conflicting events and corrupt stored histories. Live model quality and production scalability remain unevaluated.
 
 For one ordered timeline, investigate(events) returns the final state and an immutable sequence of transitions citing their original event IDs. An identical retry contributes no extra evidence. Reusing an ID with another event type rejects the timeline. This component does not infer why a failure occurred.
 
@@ -42,3 +42,5 @@ Read the current state and chronological evidence with `curl http://127.0.0.1:80
 Get a deterministic summary with `curl http://127.0.0.1:8080/orders/demo/summary`. The response identifies provider mock-v1 and cites an event ID for each state claim. Failed orders report that the cause is unknown from the recorded event types. Live model integration and quality evaluation remain future work.
 
 Run `java -cp build FailureScenarios` after compilation to evaluate terminal-state rejection, four corrupt-history variants, recovery after storage repair and unknown-order summaries. The fixture exercises real loopback HTTP requests with bounded client timeouts.
+
+Run `sh scripts/demo.sh` for the complete local demonstration. See [demo and limitations](docs/DEMO.md) for expected output and scope.

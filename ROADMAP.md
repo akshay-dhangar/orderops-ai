@@ -2,7 +2,7 @@
 
 Goal: Investigate order failures from event timelines and cite the evidence.
 
-Status: active. The initial core component is implemented; the full MVP is not.
+Status: scoped local MVP implemented. Acceptance covers the Java local service and deterministic mock summaries described in docs/DEMO.md.
 
 - [x] Day 1: Order state reducer and domain fixtures.
 - [x] Day 2: Add event ingestion API with duplicate handling.
@@ -10,7 +10,7 @@ Status: active. The initial core component is implemented; the full MVP is not.
 - [x] Day 4: Expose read-only investigation tools.
 - [x] Day 5: Add evidence-linked model summaries with a mock provider.
 - [x] Day 6: Evaluate common failure scenarios.
-- [ ] Day 7: Publish a reproducible local demo and limitations.
+- [x] Day 7: Publish a reproducible local demo and limitations.
 
 ## Definition of done
 
@@ -22,3 +22,5 @@ Status: active. The initial core component is implemented; the full MVP is not.
 - Real model quality is not claimed without a live evaluation.
 
 Seven days is a target. Reduce scope or record unfinished work explicitly; never mark a project complete merely because its week ended.
+
+18 November acceptance review: demo command, reproducible output, failure fixtures, documented limits and local LinkedIn draft are present. Local checks pass. Portfolio completion awaits GitHub CI on this commit. Live-model evaluation remains future work.

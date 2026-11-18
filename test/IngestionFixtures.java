@@ -44,6 +44,7 @@ public final class IngestionFixtures {
                 + "The failure cause is unknown from the recorded event types.\n";
             if (summary.statusCode() != 200 || !summary.body().equals(expectedSummary))
                 throw new AssertionError("unexpected summary: " + summary.body());
+            System.out.println(summary.body());
             put(root.resolve("/orders/B/summary"), "placed", 405, "use GET");
             var missing = HttpRequest.newBuilder(root.resolve("/orders/missing/investigation")).GET().build();
             if (CLIENT.send(missing, HttpResponse.BodyHandlers.discarding()).statusCode() != 404)

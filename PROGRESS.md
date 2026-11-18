@@ -21,3 +21,7 @@ Day 5 adds a deterministic summary provider through the GET summary endpoint. Th
 ## 18 November — failure evaluation
 
 Day 6 evaluates terminal-state preservation, malformed/duplicate/invalid-transition/empty persisted histories, retry after storage repair and missing-order summaries over HTTP. Corrupt history remains intact after rejected writes. All fixtures passed locally. Packaged demo, limitations and a local LinkedIn draft remain for Day 7. [Java checks](https://github.com/akshay-dhangar/orderops-ai/actions/workflows/ci.yml)
+
+## 18 November — packaged local MVP
+
+Added one-command demo and CI execution, printed the checked mock summary, documented reproduction and practical limits, and saved the LinkedIn draft. All scoped acceptance artifacts are present. Completion is conditional on remote CI passing.
