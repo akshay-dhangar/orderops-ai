@@ -1,0 +1,33 @@
+PROGRESS.md
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 24-27
+ROADMAP.md
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 5,13,25-26
+README.md
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 5,7,9,26,45-46
+docs/DEMO.md
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 1-28
+docs/LINKEDIN-DRAFT.md
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 1-12
+scripts/demo.sh
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 1-9
+.github/workflows/ci.yml
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 14
+test/IngestionFixtures.java
+  s_eb0b26e52cc031::t_6d27f1e4509fe0 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7d0b323b1f66006db36cce2555a6f02f3678887f",
+  "prompts": {},
+  "sessions": {
+    "s_eb0b26e52cc031": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a187ba-22aa-7793-8324-39d8f75719e0",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Akshay Dhangar <48667712+akshay-dhangar@users.noreply.github.com>"
+    }
+  }
+}
